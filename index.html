@@ -175,7 +175,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     </a>
   </div>
 </header>
-​
+
 <main>
   <section class="hero">
     <span class="eyebrow">Subtitle Speech Synchronizer</span>
@@ -188,7 +188,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
       <span class="trust-chip">🎞️ FPS conversion</span>
     </div>
   </section>
-​
+
   <div class="grid">
     <div class="col">
       <section class="card">
@@ -197,7 +197,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
         <input type="file" id="fileSub" accept=".srt,.vtt,.txt" hidden />
         <div id="pillSub"></div>
       </section>
-​
+
       <section class="card">
         <div class="card-head"><span class="step">2</span><div><h2>Choose how to sync</h2><p>Align to a reference, or adjust manually.</p></div></div>
         <div class="seg" id="modeSeg">
@@ -238,10 +238,10 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
         </div>
         <div class="status" id="status"></div>
       </section>
-​
+
       <div class="note"><span>🔒</span><div><b>Totally private.</b> All parsing and synchronizing happens locally in your browser — nothing is ever uploaded to a server.</div></div>
     </div>
-​
+
     <div class="col">
       <section class="card result-card">
         <div class="card-head"><span class="step">3</span><div><h2>Result</h2><p>Synced timeline — download when it looks right.</p></div></div>
@@ -267,7 +267,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     </div>
   </div>
 </main>
-​
+
 <footer>SubSync · client-side subtitle synchronizer · inspired by <a href="https://github.com/sc0ty/subsync" target="_blank" rel="noopener">sc0ty/subsync</a>. Your files never leave your device.</footer>
 <script>
 "use strict";
@@ -275,7 +275,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
   /* ---------- state ---------- */
   var state={sub:null,ref:null,subName:"",refName:"",result:null,mode:"auto",info:null};
   var FPS=[23.976,24,25,29.97,30,50,59.94,60];
-​
+
   /* ---------- time helpers ---------- */
   function pad(n,l){n=String(n);while(n.length<l)n="0"+n;return n;}
   function fmtSrt(t){if(t<0)t=0;var ms=Math.round(t*1000);var h=Math.floor(ms/3600000);ms-=h*3600000;
@@ -291,7 +291,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     var h=m[1]?parseInt(m[1],10):0,mi=parseInt(m[2],10),s=parseFloat(m[3]);
     return h*3600+mi*60+s;
   }
-​
+
   /* ---------- parser (SRT + VTT) ---------- */
   function parseSubs(raw){
     raw=raw.replace(/^\uFEFF/,"").replace(/\r\n/g,"\n").replace(/\r/g,"\n");
@@ -311,7 +311,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     cues.sort(function(a,b){return a.start-b.start;});
     return cues;
   }
-​
+
   /* ---------- auto sync: Hough voting over (scale, offset) ---------- */
   function commonScales(){
     var out=[1];
@@ -378,11 +378,11 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     best.ratio=best.score/S.length;
     return best;
   }
-​
+
   function applyTransform(sub,scale,offset){
     return sub.map(function(c){return{start:c.start*scale+offset,end:c.end*scale+offset,text:c.text};});
   }
-​
+
   /* ---------- serialize ---------- */
   function toSrt(cues){
     var out="";
@@ -403,12 +403,12 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;
     document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},100);
   }
-​
+
   /* ---------- DOM ---------- */
   var $=function(id){return document.getElementById(id);};
   function setStatus(msg,kind){var s=$("status");s.className="status show "+(kind||"ok");s.innerHTML=msg;}
   function clearStatus(){$("status").className="status";}
-​
+
   function pill(container,name,cues,onClear){
     if(!name){container.innerHTML="";return;}
     var dur=cues.length?fmtShort(cues[cues.length-1].end):"";
@@ -417,7 +417,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     container.querySelector(".nm").textContent=name;
     container.querySelector(".x").onclick=onClear;
   }
-​
+
   function renderPreview(cues){
     var body=$("pvBody");
     if(!cues||!cues.length){body.innerHTML='<tr><td colspan="3" class="empty">Load a subtitle file to begin.</td></tr>';
@@ -433,14 +433,14 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     body.innerHTML=html;
     $("pvCount").textContent=cues.length+" lines"+(cues.length>max?" (showing "+max+")":"");
   }
-​
+
   function refreshButtons(){
     $("btnAuto").disabled=!(state.sub&&state.ref);
     $("btnManual").disabled=!state.sub;
     var hasRes=!!state.result;
     $("btnSrt").disabled=!hasRes;$("btnVtt").disabled=!hasRes;
   }
-​
+
   function setMetrics(info){
     $("mLines").textContent=state.result?state.result.length:"—";
     if(!info){$("mOffset").textContent="—";$("mScale").textContent="—";$("mScore").textContent="—";return;}
@@ -448,10 +448,10 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     $("mScale").textContent=info.scale.toFixed(5);
     $("mScore").textContent=info.ratio!=null?Math.round(info.ratio*100)+"%":"—";
   }
-​
+
   /* ---------- file loading ---------- */
   function readFile(file,cb){var r=new FileReader();r.onload=function(){cb(String(r.result));};r.readAsText(file);}
-​
+
   function loadSub(file){
     readFile(file,function(txt){
       var cues=parseSubs(txt);
@@ -473,7 +473,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
       setStatus("Reference loaded ("+cues.length+" lines). Click <b>Auto-synchronize</b>.","ok");
     });
   }
-​
+
   /* ---------- wire dropzones ---------- */
   function wireDrop(zoneId,inputId,handler){
     var z=$(zoneId),inp=$(inputId);
@@ -485,7 +485,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
   }
   wireDrop("dropSub","fileSub",loadSub);
   wireDrop("dropRef","fileRef",loadRef);
-​
+
   /* ---------- mode switch ---------- */
   $("modeSeg").addEventListener("click",function(e){
     var b=e.target.closest("button");if(!b)return;
@@ -494,7 +494,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     $("panelAuto").hidden=state.mode!=="auto";
     $("panelManual").hidden=state.mode!=="manual";
   });
-​
+
   /* ---------- FPS selects ---------- */
   (function(){var f=$("fpsFrom"),t=$("fpsTo");FPS.forEach(function(v){
     var o1=document.createElement("option");o1.value=v;o1.textContent=v;f.appendChild(o1);
@@ -502,7 +502,7 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     function upd(){if(f.value&&t.value){$("scale").value=(parseFloat(t.value)/parseFloat(f.value)).toFixed(6);}}
     f.onchange=upd;t.onchange=upd;
   })();
-​
+
   /* ---------- actions ---------- */
   $("btnAuto").onclick=function(){
     if(!state.sub||!state.ref)return;
@@ -541,13 +541,12 @@ footer{max-width:1140px;margin:0 auto;padding:26px 22px;color:var(--faint);font-
     pill($("pillSub"),"");pill($("pillRef"),"");renderPreview(null);setMetrics(null);refreshButtons();clearStatus();
     $("shift").value=0;$("scale").value=1;$("fpsFrom").value="";$("fpsTo").value="";$("fileSub").value="";$("fileRef").value="";
   };
-​
+
   // expose for tests
   window.__subsync={parseSubs:parseSubs,autoSync:autoSync,applyTransform:applyTransform,toSrt:toSrt,parseTime:parseTime,fmtSrt:fmtSrt};
   refreshButtons();
 })();
 </script>
-​
+
 </body>
 </html>
-​
